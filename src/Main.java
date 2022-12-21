@@ -1,3 +1,6 @@
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 /**
  * Materialele de referinta pentru a rezolva restul exercitiilor poate fi gasit aici
  * Link - https://ro.wikipedia.org/wiki/Cod_numeric_personal_(Rom%C3%A2nia)
@@ -90,15 +93,68 @@ public class Main {
     }
 
     // TODO: Scrieti o metoda care, pe baza stringului de tip dd-MM-yyyy obtinut, sa returneze varsta persoanei ca un int
+    public static int calculateAgeBasedOnBirthDate(String birthDate) {
+        String[] formattedBirthDate = birthDate.split("-");
+        int dayOfBirth = Integer.parseInt(formattedBirthDate[0]);
+        int monthOfBirth = Integer.parseInt(formattedBirthDate[1]);
+        int yearOfBirth = Integer.parseInt(formattedBirthDate[2]);
+
+        String pattern = "dd-MM-yyyy";
+        String currentDate = new SimpleDateFormat(pattern).format(new Date());
+
+        String[] formattedCurrentDate = currentDate.split("-");
+        int currentDay = Integer.parseInt(formattedCurrentDate[0]);
+        int currentMonth = Integer.parseInt(formattedCurrentDate[1]);
+        int currentYear = Integer.parseInt(formattedCurrentDate[2]);
+
+        int age = currentYear - yearOfBirth;
+        if (monthOfBirth > currentMonth) {
+            // Echivalent cu age = age - 1
+            age -= 1;
+        } else if (monthOfBirth == currentMonth) {
+            if (dayOfBirth > currentDay) {
+                age -= 1;
+            }
+        }
+        return age;
+    }
 
     /** TODO: Scrieti o metoda care sa verifice judetul in care persoana s-a nascut folosind caracterele aflate pe pozitia 7-8
      *  EXEMPLU: In cazul unei persoane cu CNP-ul 295060708XXXX caracterele care va intereseaza sunt '08'
      * Daca verificati linkul de mai sus, o sa vedeti in sectiunea 'Structura' la 'JJ' numarul 08 este rezervat pentru Brasov
      * Retrunati un String cu numele judetului i.e "Brasov"
      */
+    public static String getCountyBasedOnCnp(String CNP) {
+        String county = "";
+        int countyCode = Integer.parseInt(CNP.substring(7,9));
+        switch (countyCode) {
+            case 1:
+                county = "Alba";
+                break;
+            case 2:
+                county = "Arad";
+                break;
+            case 3:
+                county = "Arges";
+                break;
+            case 4:
+                county = "Bacau";
+                break;
+            case 5:
+                county = "Bihor";
+                break;
+            default:
+                county = "Invalid";
+                break;
+        }
+        return county;
+    }
+
 
     public static void main(String[] args) {
-        String CNP = "2931111050098";
-
+        String CNP = "2961031050098";
+        System.out.println(getBirthDateFromCnpAsString(CNP));
+        System.out.println(calculateAgeBasedOnBirthDate(getBirthDateFromCnpAsString(CNP)));
+        System.out.println(getCountyBasedOnCnp(CNP));
     }
 }
